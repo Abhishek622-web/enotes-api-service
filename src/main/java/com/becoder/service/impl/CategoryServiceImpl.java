@@ -1,6 +1,7 @@
 package com.becoder.service.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -28,6 +29,7 @@ public class CategoryServiceImpl implements CategoryService {
 	public boolean savecategory(CategoryDto categoryDto) {
 		Category category = modelMapper.map(categoryDto, Category.class);
 		category.setIsDeleted(false);
+		category.setCreatedOn(new Date());
 		Category saveCategory = cateRepository.save(category);
 		if (ObjectUtils.isEmpty(saveCategory)) {
 			return false;
@@ -74,6 +76,19 @@ public class CategoryServiceImpl implements CategoryService {
 			return true;
 		}
 		return false;
+	}
+
+	@Override
+	public CategoryDto updateCategory(Integer id, CategoryDto categoryDto) {
+		Category existing = cateRepository.findById(id)
+				.orElseThrow(() -> new RuntimeException("Category not found with id: " + id));
+		existing.setName(categoryDto.getName());
+		existing.setDescription(categoryDto.getDescription());
+		existing.setUpdatedOn(new Date());
+		Category updatedCategory = cateRepository.save(existing);
+		CategoryDto updatedCategoryDto = modelMapper.map(updatedCategory, CategoryDto.class);
+
+		return updatedCategoryDto;
 	}
 
 }

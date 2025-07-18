@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -67,8 +68,7 @@ public class CategoryController {
 	}
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<?>  deleteById(@PathVariable Integer id){
-		
+	public ResponseEntity<?>  deleteById(@PathVariable Integer id){		
 	boolean categoryDeleted =categoryService.deleteById(id);
 	if(categoryDeleted) {
 		return new ResponseEntity<>("Deleted successfully",HttpStatus.OK);
@@ -76,12 +76,12 @@ public class CategoryController {
 	return new ResponseEntity<>("Category not found",HttpStatus.INTERNAL_SERVER_ERROR);	
 	}
 	
-	
-	
-	
-	
-	
-	
+	@PutMapping("/{id}")
+	public ResponseEntity<?>  updateById(@PathVariable Integer id ,@RequestBody CategoryDto categoryDto){		
+		
+	CategoryDto updateCategoryDto=	categoryService.updateCategory(id, categoryDto);
+	return new ResponseEntity<>(updateCategoryDto,HttpStatus.OK);
+	}
 	
 	
 	
