@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
+	
 	@ExceptionHandler(NullPointerException.class)
 	public ResponseEntity<?> handleNullPointerException(Exception e){	
 		return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
@@ -17,4 +18,9 @@ public class GlobalExceptionHandler {
 	public ResponseEntity<?> handleResourceNotFoundException(Exception e){	
 		return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_FOUND);
 	}
+	@ExceptionHandler(ExistDataException.class)
+	public ResponseEntity<?> handleExistDataException(ExistDataException e){	
+		return new ResponseEntity<>(e.getMessage(),HttpStatus.CONFLICT);
+	}
+	
 }

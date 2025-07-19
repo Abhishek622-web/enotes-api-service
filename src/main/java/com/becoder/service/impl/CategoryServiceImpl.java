@@ -7,12 +7,14 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import com.becoder.dto.CategoryDto;
 import com.becoder.dto.CategoryResponse;
 import com.becoder.entity.Category;
+import com.becoder.exception.ExistDataException;
 import com.becoder.exception.ResourceNotFoundException;
 import com.becoder.repository.CategoryRepository;
 import com.becoder.services.CategoryService;
@@ -28,9 +30,14 @@ public class CategoryServiceImpl implements CategoryService {
 
 	@Override
 	public boolean savecategory(CategoryDto categoryDto) {
+	boolean existCategory =	cateRepository.existsByName(categoryDto.getName());
+	if(existCategory) {
+		throw new ExistDataException("Allready exist data");
+	}
+		
 		Category category = modelMapper.map(categoryDto, Category.class);
 		category.setIsDeleted(false);
-		category.setCreatedOn(new Date());
+	
 		Category saveCategory = cateRepository.save(category);
 		if (ObjectUtils.isEmpty(saveCategory)) {
 			return false;
@@ -86,7 +93,7 @@ public class CategoryServiceImpl implements CategoryService {
 				.orElseThrow(() -> new RuntimeException("Category not found with id: " + id));
 		existing.setName(categoryDto.getName());
 		existing.setDescription(categoryDto.getDescription());
-		existing.setUpdatedOn(new Date());
+		
 		Category updatedCategory = cateRepository.save(existing);
 		CategoryDto updatedCategoryDto = modelMapper.map(updatedCategory, CategoryDto.class);
 
