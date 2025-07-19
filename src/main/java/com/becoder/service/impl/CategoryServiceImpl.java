@@ -13,6 +13,7 @@ import org.springframework.util.ObjectUtils;
 import com.becoder.dto.CategoryDto;
 import com.becoder.dto.CategoryResponse;
 import com.becoder.entity.Category;
+import com.becoder.exception.ResourceNotFoundException;
 import com.becoder.repository.CategoryRepository;
 import com.becoder.services.CategoryService;
 
@@ -60,8 +61,9 @@ public class CategoryServiceImpl implements CategoryService {
 	}
 
 	@Override
-	public CategoryDto getCategoryById(Integer id) {
-		Optional<Category> category = cateRepository.findByIdAndIsDeletedFalse(id);
+	public CategoryDto getCategoryById(Integer id) throws ResourceNotFoundException {
+	Category category = cateRepository.findByIdAndIsDeletedFalse(id)
+				.orElseThrow(()-> new ResourceNotFoundException("category not found"+id));
 		CategoryDto map = modelMapper.map(category, CategoryDto.class);
 		return map;
 	}

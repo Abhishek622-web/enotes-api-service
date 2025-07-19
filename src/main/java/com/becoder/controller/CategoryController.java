@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.becoder.dto.CategoryDto;
 import com.becoder.dto.CategoryResponse;
 import com.becoder.entity.Category;
+import com.becoder.exception.ResourceNotFoundException;
 import com.becoder.services.CategoryService;
 
 import lombok.RequiredArgsConstructor;
@@ -59,7 +60,7 @@ public class CategoryController {
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<?> getDetailsById(@PathVariable Integer id) {
+	public ResponseEntity<?> getDetailsById(@PathVariable Integer id) throws ResourceNotFoundException {
 		CategoryDto categoryById = categoryService.getCategoryById(id);
 		if(ObjectUtils.isEmpty(categoryById)) {
 			return new ResponseEntity<>("Category not found",HttpStatus.NOT_FOUND);
