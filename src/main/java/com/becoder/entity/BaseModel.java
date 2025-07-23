@@ -17,7 +17,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @MappedSuperclass
-
 public abstract class BaseModel {
 
 
