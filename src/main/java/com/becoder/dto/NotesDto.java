@@ -3,6 +3,7 @@ package com.becoder.dto;
 import java.util.Date;
 
 import com.becoder.entity.Category;
+import com.becoder.entity.FileDetails;
 
 import jakarta.persistence.ManyToOne;
 import lombok.Getter;
@@ -22,17 +23,9 @@ public class NotesDto {
 	private Integer updatedBy;
 	private Date createdOn;
 	private Date updatedOn;
-	
-	private FilesDto fileDetails;
+	private FileDetails fileDetails;
 
-	@Getter
-	@Setter
-	@NoArgsConstructor
-	public static class FilesDto {
-		private Integer id;
-		private String originalFileName;
-		private String displayFileName;
-	}
+	
 	
 	@Getter
 	@Setter
@@ -40,5 +33,13 @@ public class NotesDto {
 	public static class CategoryDto{    // we are this class because we want only 
 		private Integer id;             // this much data in response
 		private String name;           //if we want whole o/p then remove this class it will
+	}
+	@Getter
+	@Setter
+	@NoArgsConstructor
+	public static class FileDetails {
+		private Integer id;
+		private String originalFileName;
+		private String displayFileName;
 	}
 }
