@@ -1,7 +1,5 @@
 package com.becoder.controller;
 
-
-
 import java.util.Collections;
 import java.util.List;
 
@@ -21,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.becoder.dto.NotesDto;
+import com.becoder.dto.NotesResponse;
 import com.becoder.entity.FileDetails;
 import com.becoder.services.NotesService;
 import com.becoder.util.CommonUtil;
@@ -33,18 +32,18 @@ import lombok.RequiredArgsConstructor;
 public class NotesController {
 
 	private final NotesService notesService;
-	
+
 	@PostMapping("/")
-	public ResponseEntity<?> saveNotes(@RequestParam  String notes ,
-			@RequestParam(required = false) MultipartFile file) throws Exception{
-		
-		Boolean saveNotes = notesService.saveNotes(notes,file);
-		if(saveNotes) {
-			return CommonUtil.createBuildResponseMessage("notes saved",HttpStatus.CREATED);
+	public ResponseEntity<?> saveNotes(@RequestParam String notes, @RequestParam(required = false) MultipartFile file)
+			throws Exception {
+
+		Boolean saveNotes = notesService.saveNotes(notes, file);
+		if (saveNotes) {
+			return CommonUtil.createBuildResponseMessage("notes saved", HttpStatus.CREATED);
 		}
-		return CommonUtil.createErrorResponseMessage("notesnot saved",HttpStatus.INTERNAL_SERVER_ERROR);
+		return CommonUtil.createErrorResponseMessage("notesnot saved", HttpStatus.INTERNAL_SERVER_ERROR);
 	}
-	
+
 	@GetMapping("/download/{id}")
 	public ResponseEntity<?> downloadFile(@PathVariable Integer id) throws Exception {
 		FileDetails fileDetails = notesService.getFileDetails(id);
@@ -57,17 +56,23 @@ public class NotesController {
 
 		return ResponseEntity.ok().headers(headers).body(data);
 	}
-	
+
 	@GetMapping("/")
-	public ResponseEntity<?> allNotes(){
-		
+	public ResponseEntity<?> allNotes() {
+
 		List<NotesDto> allNotes = notesService.getAllNotes();
-		if(CollectionUtils.isEmpty(allNotes)) {
+		if (CollectionUtils.isEmpty(allNotes)) {
 			return ResponseEntity.noContent().build();
 		}
 		return CommonUtil.createBuildResponse(allNotes, HttpStatus.OK);
 	}
-	
-	
-	
+
+	@GetMapping("/user-page")
+	public NotesResponse getAllNotesByUser(@RequestParam(name = "pageNo", defaultValue = "0") Integer pageNo,
+			@RequestParam(name = "pageSize", defaultValue = "5") Integer pageSize) {
+		Integer userId = 2;
+		NotesResponse notes = notesService.getNotesByUser(pageNo, userId, pageSize);
+		return notes;
+	}
+
 }
